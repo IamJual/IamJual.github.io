@@ -1,1 +1,0 @@
-# IamJual.github.io
