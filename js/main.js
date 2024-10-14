@@ -50,8 +50,9 @@ const materials = [
 const cube = new THREE.Mesh(geometry, materials);
 scene.add(cube);
 
-// Add event listener for scroll
+// Add event listeners for both scroll and touch
 window.addEventListener('wheel', onMouseWheel);
+window.addEventListener('touchmove', onTouchMove);
 
 // Variable to store cumulative rotation
 let cumulativeRotation = 0;
@@ -69,6 +70,33 @@ function onMouseWheel(event) {
 
   // Render the scene
   renderer.render(scene, camera);
+}
+
+let lastTouchY = 0;
+
+function onTouchMove(event) {
+  // Prevent the default touch behavior
+  event.preventDefault();
+
+  const touch = event.touches[0];
+  const currentTouchY = touch.clientY;
+
+  if (lastTouchY) {
+    // Calculate the touch delta
+    const touchDelta = currentTouchY - lastTouchY;
+
+    // Calculate rotation based on touch delta
+    const rotationSpeed = 0.005;
+    cumulativeRotation += touchDelta * rotationSpeed;
+
+    // Apply rotation to the cube
+    cube.rotation.y = -cumulativeRotation;
+
+    // Render the scene
+    renderer.render(scene, camera);
+  }
+
+  lastTouchY = currentTouchY;
 }
 
 // Animation loop
